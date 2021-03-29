@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Online House Assistant Management</title>
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+</head>
+<body>
+<div align="center" class="container my-2">
+    <!--    @ symbol is a reference content path of your application (root app)-->
+    <h1>House List</h1>
+    <a th:href="@{/addHouses}" class="btn btn-primary btn-sm mb-3"> Add House </a>
+
+    <table border="1" class="table table-striped table-responsive-md" >
+        <thead>
+        <tr>
+            <th>House Code</th>
+            <th>House Type</th>
+            <th>Location</th>
+            <th>Price</th>
+            <th>House Name</th>
+            <th>House Status</th>
+            <th>Room No.</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        <!--    For each house iterate through the house list providing the following details (Thymeleaf th:each attribute)-->
+        <tr th:each=" house: ${listHouses}">
+            <td th:text="${house.houseCode}">House Code</td>
+            <td th:text="${house.houseType}">House Type</td>
+            <td th:text="${house.location}">Location</td>
+            <td th:text="${house.price}">Price</td>
+            <td th:text="${house.name}">House Name</td>
+            <td th:text="${house.status}">House Status</td>
+            <td th:text="${house.roomNo}">Room No.</td>
+
+            <td>
+                <a th:href="@{'/editHouses/' + ${house.houseCode}}" class="btn btn-primary"> Update </a>
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                <a th:href="@{'/deleteHouses/' + ${house.houseCode}}" class="btn btn-danger"> Delete </a>
+
+
+
+            </td>
+        </tr>
+
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>
