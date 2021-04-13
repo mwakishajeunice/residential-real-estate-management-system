@@ -40,9 +40,9 @@
             <td th:text="${house.roomNo}">Room No.</td>
 
             <td>
-                <a th:href="@{'/editHouses/' + ${house.houseCode}}" class="btn btn-primary"> Update </a>
+                <a th:href="@{/editHouses/{houseCode}(houseCode=${house.houseCode})}" class="btn btn-primary"> Update </a>
                 &nbsp;&nbsp;&nbsp;&nbsp;
-                <a th:href="@{'/deleteHouses/' + ${house.houseCode}}" class="btn btn-danger"> Delete </a>
+                <a th:href="@{/deleteHouses/{houseCode}(houseCode=${house.houseCode})}" class="btn btn-danger"> Delete </a>
 
 
 

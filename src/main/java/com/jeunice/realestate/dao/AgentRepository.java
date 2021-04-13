@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface AgentRepository extends JpaRepository<Agent, Long> {
-    boolean existsAgentByPhoneNumber(Long phoneNumber);
+//    boolean existsAgentByPhoneNumber(Long phoneNumber);
 
 }

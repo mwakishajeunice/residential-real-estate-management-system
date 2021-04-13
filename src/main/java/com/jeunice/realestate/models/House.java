@@ -5,6 +5,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Entity
@@ -20,10 +22,15 @@ public class House {
     @Enumerated
     private HouseTypes houseType;
 
+    @NotBlank(message = "Location is Mandatory")
     private String location;
+    @NotNull(message = "Price is Mandatory")
     private double price;
+    @NotBlank(message = "Name is Mandatory")
     private String name;
+    @NotBlank(message = "Status is Mandatory")
     private String status;
+    @NotBlank(message = "Room No. is Mandatory")
     private String roomNo;
 
     @ManyToOne(targetEntity = Agent.class, cascade = CascadeType.ALL)

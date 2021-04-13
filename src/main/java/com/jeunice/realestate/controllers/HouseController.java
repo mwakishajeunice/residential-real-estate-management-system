@@ -27,7 +27,7 @@ public class HouseController {
         return "house_index";
     }
 
-    @GetMapping("/{agentId}/houses")
+    @GetMapping("/houses/{agentId}")
     public  String agentHouses(@PathVariable("agentId") Long agentId, Model model){
         model.addAttribute("listHouses", houseServiceImplementation.findHousesByAgentId(agentId));
         return "house_index";

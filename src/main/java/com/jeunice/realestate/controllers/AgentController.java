@@ -2,6 +2,7 @@ package com.jeunice.realestate.controllers;
 import com.jeunice.realestate.models.Agent;
 import com.jeunice.realestate.services.AgentServiceImplementation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -21,8 +22,8 @@ public class AgentController {
     //Create a method handler for home-page(index.html) that will display a list of agents
     @GetMapping("/agents")
     public String viewHomePage(Model model) {
-        //List<Agent> agentList = agentServiceImplementation.getAllAgents();
         model.addAttribute("agentList", agentServiceImplementation.getAllAgents());
+//       return findPaginated(1, model);
         return "index";
     }
 
@@ -54,7 +55,7 @@ public class AgentController {
 
     ModelAndView modelAndView = new ModelAndView("edit_agent");
 
-    Optional<Agent> agent = agentServiceImplementation.getAgentById(agentId);
+    Agent agent = agentServiceImplementation.getAgentById(agentId);
     modelAndView.addObject("agent",agent);
 
     return modelAndView;
@@ -67,7 +68,19 @@ public class AgentController {
         return "redirect:/agents";
     }
 
+    @GetMapping("/page/{pageNo}")
+    public  String findPaginated(@PathVariable (value = "pageNo") int pageNo, Model model){
+        int pageSize = 6;
+        Page<Agent> page = agentServiceImplementation.findPaginated(pageNo, pageSize);
+        List<Agent> listAgents = page.getContent();
 
+        model.addAttribute("currentPage", pageNo);
+        model.addAttribute("totalPages", page.getTotalPages());
+        model.addAttribute("totalItems", page.getTotalElements());
+        model.addAttribute("listAgents", listAgents);
+
+        return "index";
+    }
 
 }
 

@@ -4,6 +4,9 @@ import com.jeunice.realestate.dao.AgentRepository;
 import com.jeunice.realestate.models.Agent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,14 +29,16 @@ public class AgentServiceImplementation {
 
     //Save Method for Agents
     public Agent saveAgent(Agent agent) {
-//        if (agentRepository.existsAgentByPhoneNumber(agent.getPhoneNumber()))
-//            throw new DuplicateKeyException("The phone number is taken");
+    //if (agentRepository.existsAgentByPhoneNumber(agent.getPhoneNumber()))
+    //throw new DuplicateKeyException("The phone number is taken");
         return agentRepository.save(agent);
     }
 
     //Get Agent by Id
-    public Optional<Agent> getAgentById(Long agentId) {
-        return agentRepository.findById(agentId);
+    public Agent getAgentById(Long agentId){
+        return agentRepository.findById(agentId).orElseThrow(() -> {
+            throw new NoSuchElementException("Agent not found for id :: " + agentId);
+        });
     }
 
     //Delete method using agentId
@@ -41,6 +46,12 @@ public class AgentServiceImplementation {
         agentRepository.findById(agentId).ifPresentOrElse(agentRepository::delete, () -> {
             throw new NoSuchElementException("not found");
         });
+    }
+
+    //Pagination
+    public Page<Agent> findPaginated(int pageNo, int pageSize){
+        Pageable pageable = PageRequest.of(pageNo-1, pageSize);
+        return  this.agentRepository.findAll(pageable);
     }
 }
 

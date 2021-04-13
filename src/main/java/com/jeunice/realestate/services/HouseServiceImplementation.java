@@ -33,11 +33,13 @@ public class HouseServiceImplementation{
 
     //Save Method for houses
     public House saveHouse(House house){
+
         return houseRepository.save(house);
     }
 
     //Get method by house code
     public Optional<House> getHouseByCode(Integer houseCode){
+
         return houseRepository.findById(houseCode);
     }
 
