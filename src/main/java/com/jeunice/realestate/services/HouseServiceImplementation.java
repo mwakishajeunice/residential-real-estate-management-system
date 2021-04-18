@@ -16,19 +16,13 @@ import static com.jeunice.realestate.models.HouseTypes.BEDSITTER;
 //Implements the interface HouseService
 public class HouseServiceImplementation{
 
-    House house = new House(453,BEDSITTER,"Gate",7000.00,"Acacia","Booked","A6",new Agent());
-
-
+//    House house = new House(453,BEDSITTER,"Njokerio",3500.00,"Breeze","Booked","A6");
     @Autowired
     private HouseRepository houseRepository;
 
     //The method will basically return a list of all houses to the controller
     public List<House> getAllHouses() {
         return houseRepository.findAll();
-    }
-
-    public List<House> findHousesByAgentId(Long agentId){
-        return houseRepository.findHousesByAgentAgentId(agentId);
     }
 
     //Save Method for houses
@@ -46,5 +40,9 @@ public class HouseServiceImplementation{
     //Delete method using houseCode
     public void deleteHouse(Integer houseCode){
         houseRepository.findById(houseCode).ifPresent(houseRepository::delete);
+    }
+
+    public House findHousesById(Integer houseCode) {
+        return houseRepository.findById(houseCode).orElseThrow();
     }
 }

@@ -1,91 +1,60 @@
 package com.jeunice.realestate.controllers;
+
 import com.jeunice.realestate.models.Agent;
 import com.jeunice.realestate.services.AgentServiceImplementation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 
-import java.util.*;
+import java.util.List;
 
 
-@Controller
-//@RequestMapping("/agents")
-//@RestController
+@RestController
+@RequestMapping("/agents")
 public class AgentController {
 
     @Autowired
     private AgentServiceImplementation agentServiceImplementation;
 
     //Create a method handler for home-page(index.html) that will display a list of agents
-    @GetMapping("/agents")
-    public String viewHomePage(Model model) {
-        model.addAttribute("agentList", agentServiceImplementation.getAllAgents());
-//       return findPaginated(1, model);
-        return "index";
+    @GetMapping("/all")
+    public ResponseEntity<List<Agent>> getAllAgents() {
+
+        return new ResponseEntity<>(agentServiceImplementation.getAllAgents(), HttpStatus.OK);
+    }
+
+    @GetMapping("/{agentId}")
+    public ResponseEntity<Agent> getAgentById(@PathVariable("agentId") Long agentId){
+        return new ResponseEntity<>(agentServiceImplementation.getAgentById(agentId), HttpStatus.OK);
     }
 
     //Method Handler for addNewAgent request
-    @GetMapping("/addNewAgent")
-    public String addNewAgent(Model model) {
-        //Create model attribute to bind data accessed from thymeleaf template(this empty agent object)
-        Agent agent = new Agent();
-        model.addAttribute("agent", agent);
-        return "new_agent";
-    }
+    @PostMapping("/addNewAgent")
+    public ResponseEntity<Agent> addNewAgent(@RequestBody @Validated Agent agent) {
 
-    //Updating method
-    //@PostMapping("/saveAgent")
-    @RequestMapping("/saveAgent")
-    //Bind the model attributes data to the agent
-    public String saveAgent(@ModelAttribute("agent") Agent agent) {
-        // save agent to database
-        agentServiceImplementation.saveAgent(agent);
-        //redirect to home page
-        return "redirect:/agents";
-
+        return new ResponseEntity<>(agentServiceImplementation.saveAgent(agent), HttpStatus.CREATED);
     }
 
     //Method Handler for addNewAgent request
-//    @PutMapping("/edit/{agentId}")
-    @RequestMapping("/edit/{agentId}")
-    public ModelAndView updateAgent(@PathVariable(name = "agentId") Long agentId){
+    //@PutMapping("/edit/{agentId}")
+    @PutMapping("/edit/{agentId}")
+    public ResponseEntity updateAgent(@PathVariable(name = "agentId") Long agentId,
+                            @RequestBody @Validated Agent newAgent) {
+        agentServiceImplementation.updateAgent(agentId, newAgent);
+        return  new ResponseEntity(HttpStatus.CREATED);
 
-    ModelAndView modelAndView = new ModelAndView("edit_agent");
-
-    Agent agent = agentServiceImplementation.getAgentById(agentId);
-    modelAndView.addObject("agent",agent);
-
-    return modelAndView;
     }
 
     //@DeleteMapping("/delete/{agentId}")
-    @RequestMapping("/delete/{agentId}")
-    public String deleteAgent(@PathVariable(name = "agentId") Long agentId){
+    @DeleteMapping("/delete/{agentId}")
+    public ResponseEntity deleteAgent(@PathVariable(name = "agentId") Long agentId) {
         agentServiceImplementation.deleteAgent(agentId);
-        return "redirect:/agents";
-    }
-
-    @GetMapping("/page/{pageNo}")
-    public  String findPaginated(@PathVariable (value = "pageNo") int pageNo, Model model){
-        int pageSize = 6;
-        Page<Agent> page = agentServiceImplementation.findPaginated(pageNo, pageSize);
-        List<Agent> listAgents = page.getContent();
-
-        model.addAttribute("currentPage", pageNo);
-        model.addAttribute("totalPages", page.getTotalPages());
-        model.addAttribute("totalItems", page.getTotalElements());
-        model.addAttribute("listAgents", listAgents);
-
-        return "index";
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
 }
-
-
-//    update an agent
 
 
 

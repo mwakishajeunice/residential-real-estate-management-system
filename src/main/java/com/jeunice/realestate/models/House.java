@@ -1,6 +1,7 @@
 package com.jeunice.realestate.models;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -13,6 +14,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class House {
 
     @Id
@@ -33,7 +35,9 @@ public class House {
     @NotBlank(message = "Room No. is Mandatory")
     private String roomNo;
 
-    @ManyToOne(targetEntity = Agent.class, cascade = CascadeType.ALL)
+    @ManyToOne
+    @JoinColumn(name = "agentId")
     private Agent agent;
+
 
 }

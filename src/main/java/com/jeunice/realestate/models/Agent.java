@@ -29,5 +29,7 @@ public class Agent {
     @NotNull(message = "National ID is Mandatory")
     private Long nationalId;
 
-
+//    public Agent(long l, long l1, String jeunice, String mwakisha, String s, long l2) {
+//
+//    }
 }

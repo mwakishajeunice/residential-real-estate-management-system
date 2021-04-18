@@ -1,74 +1,56 @@
 package com.jeunice.realestate.controllers;
 
-
-import com.jeunice.realestate.models.Agent;
 import com.jeunice.realestate.models.House;
 import com.jeunice.realestate.services.HouseServiceImplementation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.List;
 import java.util.Optional;
 
-@Controller
-//@RequestMapping("/houses")
-//@RestController
+@RestController
+@RequestMapping("/houses")
 public class HouseController {
 
     @Autowired
     private HouseServiceImplementation houseServiceImplementation;
 
     //Create a method handler for home-page(index.html) that will display a list of houses
-    @GetMapping("/houses")
-    public String viewHomePage(Model model){
-        model.addAttribute("listHouses" , houseServiceImplementation.getAllHouses());
-        return "house_index";
+    @GetMapping("/all")
+    public ResponseEntity<List<House>> getAllHouses(){
+
+        return new ResponseEntity<>(houseServiceImplementation.getAllHouses(), HttpStatus.OK);
     }
 
-    @GetMapping("/houses/{agentId}")
-    public  String agentHouses(@PathVariable("agentId") Long agentId, Model model){
-        model.addAttribute("listHouses", houseServiceImplementation.findHousesByAgentId(agentId));
-        return "house_index";
+    @GetMapping("/houses/{houseCode}")
+    public ResponseEntity<House> getHouses(@PathVariable("houseCode") Integer houseCode){
+
+        return new ResponseEntity<>(houseServiceImplementation.findHousesById(houseCode), HttpStatus.OK);
     }
 
     //Method handler for request addition of house files
-    @GetMapping("/addHouses")
-    public String addHouse(Model model){
-        House house = new House();
-        model.addAttribute("house", house);
-        return "new_house";
-    }
-    //Updating method
-    //@PostMapping("/saveAddedHouse")
-    @RequestMapping("/saveAddedHouse")
-    //Bind the model attributes data to the house
-    public String saveHouse(@ModelAttribute("house") House house) {
-        // save agent to database
-        houseServiceImplementation.saveHouse(house);
-        //redirect to home page
-        return "redirect:/houses";
+    @PostMapping("/addNewHouse")
+    public ResponseEntity<House> addHouse(@RequestBody House house){
 
+        return new ResponseEntity<>(houseServiceImplementation.saveHouse(house),HttpStatus.CREATED);
     }
+
     //Method Handler for saveAddedHouse request
-    //@PutMapping("/edit/{houseCode}")
-    @RequestMapping("/editHouses/{houseCode}")
-    public ModelAndView editHouseForm(@PathVariable(name = "houseCode") Integer houseCode){
-
-        ModelAndView modelAndView = new ModelAndView("edit_house");
-
-        Optional<House> house = houseServiceImplementation.getHouseByCode(houseCode);
-        modelAndView.addObject("house",house);
-
-        return modelAndView;
+    @PutMapping("/editHouse/{houseCode}")
+    public ResponseEntity editHouseForm(@PathVariable(name = "houseCode") Integer houseCode){
+        houseServiceImplementation.getHouseByCode(houseCode);
+        return new ResponseEntity(HttpStatus.CREATED);
     }
 
-    //@DeleteMapping("/delete/{houseCode}")
-    @RequestMapping("/deleteHouses/{houseCode}")
-    public String deleteAgent(@PathVariable(name = "houseCode") Integer houseCode){
+    @DeleteMapping("/deleteHouse/{houseCode}")
+    public ResponseEntity deleteHouse(@PathVariable(name = "houseCode") Integer houseCode){
         houseServiceImplementation.deleteHouse(houseCode);
-        return "redirect:/houses";
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
 }
