@@ -18,6 +18,7 @@ public class Agent {
 
     @Id
     private Long agentId;
+
     @NotNull(message = "Phone Number is Mandatory")
     private Long phoneNumber;
     @NotBlank(message = "First Name is Mandatory")
